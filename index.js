@@ -31,6 +31,7 @@
         ],
         minBytes: 4096,
         verbose: false,
+        logEnabled: false,
     };
 
     // ---------- 设置持久化 ----------
@@ -62,9 +63,23 @@
     };
 
     function pushLog(entry) {
+        if (!settings.logEnabled) return;
         stats.log.unshift(entry);
         if (stats.log.length > MAX_LOG_ROWS) stats.log.length = MAX_LOG_ROWS;
         scheduleUIRefresh();
+    }
+
+    function incStat(key) {
+        if (!settings.logEnabled) return;
+        stats[key]++;
+    }
+    function addStat(key, val) {
+        if (!settings.logEnabled) return;
+        stats[key] += val;
+    }
+    function setStat(key, val) {
+        if (!settings.logEnabled) return;
+        stats[key] = val;
     }
 
     function fmtBytes(n) {
@@ -156,7 +171,7 @@
             }
 
             if (typeof CompressionStream === 'undefined') {
-                stats.skipped++;
+                incStat('skipped');
                 pushLog({
                     time: nowHMS(), path: extractPath(input),
                     status: 'skip', note: 'CompressionStream 不可用',
@@ -166,7 +181,7 @@
 
             const body = getBodyString(init.body);
             if (body == null) {
-                stats.skipped++;
+                incStat('skipped');
                 pushLog({
                     time: nowHMS(), path: extractPath(input),
                     status: 'skip', note: 'body 类型不支持',
@@ -176,7 +191,7 @@
 
             const byteSize = typeof body === 'string' ? new Blob([body]).size : body.byteLength;
             if (byteSize < settings.minBytes) {
-                stats.skipped++;
+                incStat('skipped');
                 pushLog({
                     time: nowHMS(), path: extractPath(input),
                     status: 'skip', note: `< ${fmtBytes(settings.minBytes)} 阈值`,
@@ -185,16 +200,16 @@
                 return originalFetch(input, init);
             }
 
-            stats.intercepted++;
+            incStat('intercepted');
 
             const tGzipStart = performance.now();
             const { input: rawBytes, output: gzBytes } = await gzip(body);
             const tGzipEnd = performance.now();
 
-            stats.compressed++;
-            stats.bytesIn += rawBytes.byteLength;
-            stats.bytesOut += gzBytes.byteLength;
-            stats.lastRatio = gzBytes.byteLength / rawBytes.byteLength;
+            incStat('compressed');
+            addStat('bytesIn', rawBytes.byteLength);
+            addStat('bytesOut', gzBytes.byteLength);
+            setStat('lastRatio', gzBytes.byteLength / rawBytes.byteLength);
 
             const newHeaders = new Headers(init.headers || {});
             newHeaders.delete('content-length');
@@ -229,7 +244,7 @@
 
             return response;
         } catch (err) {
-            stats.failed++;
+            incStat('failed');
             console.error(`[${MODULE_NAME}] hook 内部错误，回退原始 fetch：`, err);
             pushLog({
                 time: nowHMS(), path: extractPath(input),
@@ -298,6 +313,10 @@
                         <label class="checkbox_label" for="cs_verbose" style="flex:1;">
                             <input id="cs_verbose" type="checkbox" ${settings.verbose ? 'checked' : ''}>
                             <span>控制台日志</span>
+                        </label>
+                        <label class="checkbox_label" for="cs_log_enabled" style="flex:1;">
+                            <input id="cs_log_enabled" type="checkbox" ${settings.logEnabled ? 'checked' : ''}>
+                            <span>记录统计与日志</span>
                         </label>
                     </div>
 
@@ -385,6 +404,11 @@
             settings.verbose = e.target.checked;
             saveSettings(settings);
         });
+        $('cs_log_enabled').addEventListener('change', e => {
+            settings.logEnabled = e.target.checked;
+            saveSettings(settings);
+            refreshUI();
+        });
         $('cs_min').addEventListener('change', e => {
             const v = parseInt(e.target.value, 10);
             settings.minBytes = isFinite(v) && v >= 0 ? v : DEFAULTS.minBytes;
@@ -428,6 +452,10 @@
         // 日志表格
         const tbody = $('cs_log_body');
         if (!tbody) return;
+        if (!settings.logEnabled) {
+            tbody.innerHTML = '<tr><td colspan="9" class="cs-empty">日志记录已关闭</td></tr>';
+            return;
+        }
         if (stats.log.length === 0) {
             tbody.innerHTML = '<tr><td colspan="9" class="cs-empty">暂无记录，发条消息试试喵~</td></tr>';
             return;
