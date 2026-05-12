@@ -1,0 +1,160 @@
+/* ===== Compressed Save 扩展样式 ===== */
+
+.CompressedSave-panel small {
+    opacity: 0.85;
+    display: inline;
+}
+
+.CompressedSave-panel .cs-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 8px 0;
+    flex-wrap: wrap;
+}
+
+.CompressedSave-panel .cs-actions {
+    margin: 8px 0;
+}
+
+.CompressedSave-panel .cs-field {
+    display: block;
+    margin: 8px 0;
+}
+
+.CompressedSave-panel .cs-paths {
+    width: 100%;
+    font-family: var(--monoFontFamily, monospace);
+    font-size: 0.85em;
+    box-sizing: border-box;
+}
+
+/* 状态徽章 */
+.CompressedSave-panel .cs-badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.78em;
+    margin-left: 6px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.CompressedSave-panel .cs-badge-on {
+    background: rgba(70, 200, 120, 0.18);
+    color: #46c878;
+    border: 1px solid rgba(70, 200, 120, 0.4);
+}
+.CompressedSave-panel .cs-badge-off {
+    background: rgba(200, 80, 80, 0.18);
+    color: #d66a6a;
+    border: 1px solid rgba(200, 80, 80, 0.4);
+}
+
+/* 统计卡片网格 */
+.CompressedSave-panel .cs-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+}
+.CompressedSave-panel .cs-stat-card-wide {
+    grid-column: span 4;
+}
+.CompressedSave-panel .cs-stat-card {
+    background: rgba(180, 106, 255, 0.08);
+    border: 1px solid rgba(180, 106, 255, 0.25);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+}
+.CompressedSave-panel .cs-stat-label {
+    font-size: 0.75em;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+.CompressedSave-panel .cs-stat-value {
+    font-size: 1.05em;
+    font-weight: 600;
+    font-family: var(--monoFontFamily, monospace);
+    word-break: break-word;
+}
+.CompressedSave-panel .cs-stat-arrow {
+    opacity: 0.5;
+    margin: 0 4px;
+}
+.CompressedSave-panel .cs-saved {
+    display: block;
+    font-size: 0.78em;
+    opacity: 0.8;
+    margin-top: 2px;
+    font-weight: 400;
+    color: #46c878;
+}
+
+/* 日志区 */
+.CompressedSave-panel .cs-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 8px 0 4px;
+}
+.CompressedSave-panel .cs-log-wrap {
+    max-height: 280px;
+    overflow: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+}
+.CompressedSave-panel .cs-log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78em;
+    font-family: var(--monoFontFamily, monospace);
+}
+.CompressedSave-panel .cs-log-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--SmartThemeBlurTintColor, rgba(40, 40, 50, 0.95));
+    z-index: 1;
+}
+.CompressedSave-panel .cs-log-table th,
+.CompressedSave-panel .cs-log-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: left;
+    white-space: nowrap;
+}
+.CompressedSave-panel .cs-log-table th {
+    font-size: 0.85em;
+    opacity: 0.7;
+    font-weight: 600;
+}
+.CompressedSave-panel .cs-log-table tbody tr:hover {
+    background: rgba(180, 106, 255, 0.07);
+}
+.CompressedSave-panel .cs-empty {
+    text-align: center !important;
+    opacity: 0.5;
+    padding: 12px !important;
+    font-style: italic;
+}
+.CompressedSave-panel .cs-note {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 状态着色 */
+.CompressedSave-panel .cs-st-ok    { color: #46c878; }
+.CompressedSave-panel .cs-st-skip  { color: #c8a046; }
+.CompressedSave-panel .cs-st-warn  { color: #c8a046; }
+.CompressedSave-panel .cs-st-err   { color: #d66a6a; }
+
+/* 紧凑型布局响应 */
+@media (max-width: 720px) {
+    .CompressedSave-panel .cs-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .CompressedSave-panel .cs-stat-card-wide {
+        grid-column: span 2;
+    }
+}

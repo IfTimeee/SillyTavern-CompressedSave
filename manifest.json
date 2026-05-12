@@ -1,0 +1,14 @@
+{
+    "display_name": "Compressed Save (猫猫加速喵~)",
+    "loading_order": 1,
+    "requires": [],
+    "optional": [],
+    "dependencies": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "莓可莉丝 for iftime",
+    "version": "1.1.0",
+    "homePage": "",
+    "auto_update": true,
+    "i18n": {}
+}
