@@ -17,6 +17,11 @@
 
 (function () {
     'use strict';
+    if (window.__CompressedSavePatched) {
+        console.warn('[CompressedSave] 已经加载过一次，跳过重复挂载喵~');
+        return;
+    }
+    window.__CompressedSavePatched = true;
 
     const MODULE_NAME = 'CompressedSave';
     const STORAGE_KEY = 'CompressedSave.settings.v1';
@@ -165,8 +170,20 @@
                 input = input.url;
             }
             init = init || {};
-
+            
             if (!shouldIntercept(input, init)) {
+                return originalFetch(input, init);
+            }
+            // 防止重复压缩：如果已经有 Content-Encoding，就不要再处理
+            const existingHeaders = new Headers(init.headers || {});
+            if (existingHeaders.has('content-encoding')) {
+                stats.skipped++;
+                pushLog({
+                    time: nowHMS(),
+                    path: extractPath(input),
+                    status: 'skip',
+                    note: `已有 Content-Encoding: ${existingHeaders.get('content-encoding')}`,
+                });
                 return originalFetch(input, init);
             }
 
