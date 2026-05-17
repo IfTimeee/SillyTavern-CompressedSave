@@ -51,7 +51,15 @@ SillyTavern 默认每次保存聊天时，都会把**整个聊天的完整 JSON*
 ---
 
 ## 安装
+### 方法一
 
+酒馆直接安装:
+ - 在SillyTavern中打开扩展管理器
+ - 点击“安装扩展”
+ - 输入地址：https://github.com/IfTimeee/SillyTavern-CompressedSave.git
+ - 选择“仅为当前用户安装”或为“所有用户安装”
+
+### 方法二
 把整个文件夹放到 SillyTavern 的扩展目录中（二选一）：
 
 **全局安装**（所有用户可见）：
@@ -66,7 +74,6 @@ SillyTavern/data/<your-user-handle>/extensions/CompressedSave/
 
 安装后刷新 SillyTavern，打开「扩展面板」即可看到 **🐈 Compressed Save (猫猫加速喵~)**。
 
-> 不需要运行 `npm install`，不需要修改任何配置文件。这是一个纯前端插件。
 
 ---
 
